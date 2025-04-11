@@ -1,0 +1,9 @@
+Below the dashed line, include easily understandable and verifiable 
+citations to all the major sources you used for your project, as described
+in the TP document: 
+https://www.cs.cmu.edu/~112/notes/term-project-and-hack112.html#tp-policies
+
+In addition, your code must also include citations directly in the code that 
+make it clear where you use code that is partly or entirely not of your 
+original design, and what the source is for that code.
+------------------------------------>

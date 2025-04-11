@@ -1,0 +1,14 @@
+Below the dashed line, for each group member, clearly specify which sections of 
+the code are predominantly your own original contributions, as described in
+the TP document: 
+https://www.cs.cmu.edu/~112/notes/term-project-and-hack112.html#personal-contributions
+
+Example: 
+
+koz
+ - Wrote the Enemy class in game_logic.py
+ - ...
+mdtaylor
+ - Designed and coded the main game screen
+ - ...
+------------------------------------>
