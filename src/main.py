@@ -6,20 +6,32 @@ def onAppStart(app):
     app.sqSize = 200
     app.groundY = 400
     app.gridSize = 40
+    app.stepsPerSecond = 400
+    app.levelStartX = app.width
+    app.levelStartY = app.groundY
 
 def redrawAll(app):
     drawRect(0, app.groundY, app.width, app.height - app.groundY, fill = None, border = 'black')
-    drawSpike(app, 300, app.groundY)  
-    drawBlock(app, 340, app.groundY)
+    drawLevel(app, app.levelStartX, app.levelStartY)
 
+def drawLevel(app, leftX, bottomY):
+    drawSpike(app, leftX, bottomY)
 
-def drawSpike(app, cx, cy):    
-    (drawPolygon(cx, cy, cx + 20, cy - 40, cx + 40, cy, 
-                fill = None, border='black'))
+def drawSpike(app, leftX, bottomY):    
+    (drawPolygon(leftX, bottomY, leftX + app.gridSize/2, bottomY - app.gridSize,
+                 leftX + app.gridSize, bottomY, fill = None, border='black'))
+
+def drawFlatSpike(app, leftX, bottomY):    
+    (drawPolygon(leftX, bottomY, leftX + app.gridSize/2, 
+                 bottomY - app.gridSize/3, leftX + app.gridSize, bottomY, 
+                 fill = None, border='black'))
     
-def drawBlock(app, cx, cy):
-    (drawRect(cx, cy-app.gridSize, app.gridSize, 
+def drawBlock(app, leftX, bottomY):
+    (drawRect(leftX, bottomY-app.gridSize, app.gridSize, 
               app.gridSize, fill = None, border = 'black'))
+    
+def onStep(app):
+    app.levelStartX -= 1
 
 def main():
     runApp()
