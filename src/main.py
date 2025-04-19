@@ -92,7 +92,8 @@ def onMousePress(app, mouseX, mouseY):
             app.currPage = 2
 
 def onStep(app):
-    app.levelStartX -= 6.5
+    if app.currPage > 1:
+        app.levelStartX -= 6.5
 
 def main():
     runApp()
