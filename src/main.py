@@ -6,10 +6,18 @@ def onAppStart(app):
     app.sqSize = 200
     app.groundY = 400
     app.gridSize = 50
-    app.stepsPerSecond = 60
+    app.stepsPerSecond = 120
     app.levelStartX = app.width
     app.levelStartY = app.groundY
     app.currPage = 0
+    app.gravity = 16
+    app.iconCx = 250
+    app.iconCy = app.groundY - app.gridSize/2
+    app.jumpV = -40
+    app.iconDx = 0
+    app.iconDy = 0
+    app.jump = False
+
 
 def redrawAll(app):
     if app.currPage == 0:
@@ -19,7 +27,9 @@ def redrawAll(app):
     elif app.currPage == 2:
         (drawRect(0, app.groundY, app.width, app.height - app.groundY, 
                 fill = None, border = 'black'))
+        drawRect(app.iconCx, app.iconCy, app.gridSize, app.gridSize, align = 'center')
         drawLevel1(app, app.levelStartX, app.levelStartY)
+    
 
 def drawHomePage(app):
     (drawRect(0, app.groundY + 20, app.width, app.height - app.groundY, 
@@ -91,9 +101,23 @@ def onMousePress(app, mouseX, mouseY):
         if (100 <= mouseX <= 325) and (200 <= mouseY <= 325):
             app.currPage = 2
 
+def onKeyPress(app, key):
+    if app.currPage > 1:
+        if key == 'space':
+            app.jump = True
+
 def onStep(app):
     if app.currPage > 1:
-        app.levelStartX -= 6.5
+        app.levelStartX -= 3.25
+        if app.jump:
+            if app.iconDy == 0:
+                app.iconDy = app.jumpV
+            app.iconCy += app.iconDy
+            app.iconDy += app.gravity
+            if app.iconCy > app.groundY - app.gridSize/2:
+                app.iconCy = app.groundY - app.gridSize/2
+                app.jump = False
+
 
 def main():
     runApp()
