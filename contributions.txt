@@ -12,3 +12,10 @@ mdtaylor
  - Designed and coded the main game screen
  - ...
 ------------------------------------>
+vjoshi2
+- Designed the drawing obstacles
+- Set up level scrolling
+- Designed first level 
+- Created layout for home + level menu pages
+- Did navigation from home through level pages
+- Worked on icon moving physics (not in code) 
