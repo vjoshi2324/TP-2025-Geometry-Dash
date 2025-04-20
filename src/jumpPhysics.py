@@ -1,4 +1,4 @@
-class jumpPhysics
+class jumpPhysics:
     def __init__(self, initialVelocity, gravity, cy, ground):
         self.initialVelocity = initialVelocity
         self.gravity = gravity
@@ -10,7 +10,7 @@ class jumpPhysics
     def takeJump(self, dt):
         self.time += dt
         self.velocity = self.initialVelocity + self.gravity * self.time
-        (self.cy = (self.initialVelocity * self.time) + 
+        self.cy = ((self.initialVelocity * self.time) + 
                     (0.5 * self.gravity * (self.time ** 2)))
         if self.cy > self.ground:
             self.cy = self.ground
