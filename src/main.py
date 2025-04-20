@@ -10,14 +10,6 @@ def onAppStart(app):
     app.levelStartX = app.width
     app.levelStartY = app.groundY
     app.currPage = 0
-    app.gravity = 16
-    app.iconCx = 250
-    app.iconCy = app.groundY - app.gridSize/2
-    app.jumpV = -40
-    app.iconDx = 0
-    app.iconDy = 0
-    app.jump = False
-
 
 def redrawAll(app):
     if app.currPage == 0:
@@ -27,7 +19,6 @@ def redrawAll(app):
     elif app.currPage == 2:
         (drawRect(0, app.groundY, app.width, app.height - app.groundY, 
                 fill = None, border = 'black'))
-        drawRect(app.iconCx, app.iconCy, app.gridSize, app.gridSize, align = 'center')
         drawLevel1(app, app.levelStartX, app.levelStartY)
     
 
@@ -104,20 +95,12 @@ def onMousePress(app, mouseX, mouseY):
 def onKeyPress(app, key):
     if app.currPage > 1:
         if key == 'space':
-            app.jump = True
+            pass
+            #call icon.jump()
 
 def onStep(app):
     if app.currPage > 1:
         app.levelStartX -= 3.25
-        if app.jump:
-            if app.iconDy == 0:
-                app.iconDy = app.jumpV
-            app.iconCy += app.iconDy
-            app.iconDy += app.gravity
-            if app.iconCy > app.groundY - app.gridSize/2:
-                app.iconCy = app.groundY - app.gridSize/2
-                app.jump = False
-
 
 def main():
     runApp()
