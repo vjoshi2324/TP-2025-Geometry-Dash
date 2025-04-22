@@ -1,5 +1,5 @@
 from cmu_graphics import *
-from jumpPhysics import jumpPhysics
+from obstacles import Obstacles
 
 def onAppStart(app):
     app.width = 800
@@ -11,12 +11,11 @@ def onAppStart(app):
     app.levelStartX = app.width
     app.levelStartY = app.groundY
     app.currPage = 0
-    #app.icon = jumpPhysics(20, -4, app.groundY - app.gridSize/2, app.groundY - app.gridSize/2)
-    app.cx = 250
-    app.cy = app.groundY - app.gridSize/2
+    app.iconCx = 250
+    app.iconCy = app.groundY - app.gridSize/2
     app.iconVelocity = 0
-    app.gravity = 0.4
-    app.isJumping = False
+    app.gravity = 0.3
+    app.inAir = False
 
 def redrawAll(app):
     if app.currPage == 0:
@@ -26,7 +25,8 @@ def redrawAll(app):
     elif app.currPage == 2:
         (drawRect(0, app.groundY, app.width, app.height - app.groundY, 
                 fill = None, border = 'black'))
-        drawRect(app.cx, app.cy, app.gridSize, app.gridSize, align = 'center')
+        (drawRect(app.iconCx, app.iconCy, app.gridSize, app.gridSize, 
+                  align = 'center'))
         drawLevel1(app, app.levelStartX, app.levelStartY)
 
 def drawHomePage(app):
@@ -54,21 +54,26 @@ def drawLevelMenu(app):
     drawLabel('Demo Mode', 475 + 225/2, 400+ 125/2, size = 20)
 
 def drawLevel1(app, leftX, bottomY):
-    drawSpike(app, leftX, bottomY)
-    drawFlatSpike(app, leftX + app.gridSize * 20, bottomY)
-    drawSpike(app, leftX + app.gridSize * 21, bottomY)
-    drawSpike(app, leftX + app.gridSize * 41, bottomY)
-    drawSpike(app, leftX + app.gridSize * 42, bottomY)
-    drawBlock(app, leftX + app.gridSize * 43, bottomY)
-    drawStack(app, leftX + app.gridSize * 46, bottomY, 2)
-    drawStack(app, leftX + app.gridSize * 49, bottomY, 3)
-    drawSpike(app, leftX + app.gridSize * 69, bottomY)
-    drawSpike(app, leftX + app.gridSize * 70, bottomY)
-    drawBlockRow(app, leftX + app.gridSize * 74, bottomY, 6)
-    drawBlockRow(app, leftX + app.gridSize * 83, bottomY, 13)
-    drawSpike(app, leftX + app.gridSize * 89, bottomY - app.gridSize)
-    drawBlockRow(app, leftX + app.gridSize * 99, bottomY - app.gridSize, 13)
-    drawSpike(app, leftX + app.gridSize * 105, bottomY - app.gridSize * 2)
+    level1Obstacles = [Obstacles('spike', leftX, bottomY),
+        Obstacles('flat spike', leftX+app.gridSize*20, bottomY),
+        Obstacles('spike', leftX + app.gridSize * 21, bottomY),
+        Obstacles('spike', leftX + app.gridSize * 41, bottomY),
+        Obstacles('spike', leftX + app.gridSize * 42, bottomY),
+        Obstacles('block', leftX + app.gridSize * 43, bottomY),
+        Obstacles('stack', leftX + app.gridSize * 46, bottomY,2),
+        Obstacles('stack', leftX + app.gridSize * 49, bottomY,3),
+        Obstacles('spike', leftX + app.gridSize * 69, bottomY),
+        Obstacles('spike', leftX + app.gridSize * 70, bottomY),
+        Obstacles('row', leftX + app.gridSize * 74, bottomY, 6),
+        Obstacles('row', leftX + app.gridSize * 83, bottomY, 13),
+        Obstacles('spike', leftX + app.gridSize * 89, bottomY - app.gridSize),
+        Obstacles('row', leftX + app.gridSize * 99, bottomY - app.gridSize, 13),
+        Obstacles('spike', leftX + app.gridSize * 105, bottomY -app.gridSize*2),
+        ]
+    
+    for i in range(len(level1Obstacles)):
+        currObstacle = level1Obstacles[i]
+        drawObstacle(app, currObstacle)
 
 def drawStack(app, leftX, bottomY, height):
     for i in range(height):
@@ -78,18 +83,15 @@ def drawBlockRow(app, leftX, bottomY, width):
     for i in range(width):
         drawBlock(app, leftX + app.gridSize * i, bottomY)
 
-def drawSpike(app, leftX, bottomY):    
-    (drawPolygon(leftX, bottomY, leftX + app.gridSize/2, bottomY - app.gridSize,
-                 leftX + app.gridSize, bottomY, fill = None, border='black'))
-
-def drawFlatSpike(app, leftX, bottomY):    
-    (drawPolygon(leftX, bottomY, leftX + app.gridSize/2, 
-                 bottomY - app.gridSize/3, leftX + app.gridSize, bottomY, 
-                 fill = None, border='black'))
-    
-def drawBlock(app, leftX, bottomY):
-    (drawRect(leftX, bottomY-app.gridSize, app.gridSize, 
-              app.gridSize, fill = None, border = 'black'))
+def drawObstacle(app, obstacle):
+    if obstacle.type == 'stack':
+        for i in range(obstacle.size):
+            drawPolygon(*obstacle.blockVtxs[i], fill = None, border = 'black')
+    elif obstacle.type == 'row':
+        for i in range(obstacle.size):
+            drawPolygon(*obstacle.blockVtxs[i], fill = None, border = 'black')
+    else:
+        drawPolygon(*obstacle.vtxs, fill = None, border = 'black')
 
 def onMousePress(app, mouseX, mouseY):
     if app.currPage == 0:
@@ -102,23 +104,26 @@ def onMousePress(app, mouseX, mouseY):
 def onKeyPress(app, key):
     if app.currPage > 1:
         if key == 'space':
-            if not app.isJumping:
-                app.isJumping = True
-                app.iconVelocity = -10
+            if not app.inAir:
+                app.inAir = True
+                app.iconVelocity = -9
+
+def onKeyHold(app, keys):
+    if 'space' in keys:
+        if not app.inAir:
+                app.inAir = True
+                app.iconVelocity = -9
                 
 def onStep(app):
     if app.currPage > 1:
-        app.levelStartX -= 3.25
-    if app.isJumping:
-        app.cy += app.iconVelocity
+        app.levelStartX -= 4
+    if app.inAir:
+        app.iconCy += app.iconVelocity
         app.iconVelocity += app.gravity
-        if app.cy > app.groundY - app.gridSize/2:
-            app.cy = app.groundY - app.gridSize/2
+        if app.iconCy > app.groundY - app.gridSize/2:
+            app.iconCy = app.groundY - app.gridSize/2
             app.iconVelocity = 0
-            app.isJumping = False
-
-        
-
+            app.inAir = False
 
 def main():
     runApp()
