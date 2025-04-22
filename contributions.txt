@@ -18,4 +18,4 @@ vjoshi2
 - Designed first level 
 - Created layout for home + level menu pages
 - Did navigation from home through level pages
-- Worked on icon moving physics (not in code) 
+- Worked on icon moving physics - jumping

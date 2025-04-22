@@ -1,4 +1,5 @@
 from cmu_graphics import *
+from jumpPhysics import jumpPhysics
 
 def onAppStart(app):
     app.width = 800
@@ -10,6 +11,12 @@ def onAppStart(app):
     app.levelStartX = app.width
     app.levelStartY = app.groundY
     app.currPage = 0
+    #app.icon = jumpPhysics(20, -4, app.groundY - app.gridSize/2, app.groundY - app.gridSize/2)
+    app.cx = 250
+    app.cy = app.groundY - app.gridSize/2
+    app.iconVelocity = 0
+    app.gravity = 0.4
+    app.isJumping = False
 
 def redrawAll(app):
     if app.currPage == 0:
@@ -19,8 +26,8 @@ def redrawAll(app):
     elif app.currPage == 2:
         (drawRect(0, app.groundY, app.width, app.height - app.groundY, 
                 fill = None, border = 'black'))
+        drawRect(app.cx, app.cy, app.gridSize, app.gridSize, align = 'center')
         drawLevel1(app, app.levelStartX, app.levelStartY)
-    
 
 def drawHomePage(app):
     (drawRect(0, app.groundY + 20, app.width, app.height - app.groundY, 
@@ -95,12 +102,23 @@ def onMousePress(app, mouseX, mouseY):
 def onKeyPress(app, key):
     if app.currPage > 1:
         if key == 'space':
-            pass
-            #call icon.jump()
-
+            if not app.isJumping:
+                app.isJumping = True
+                app.iconVelocity = -10
+                
 def onStep(app):
     if app.currPage > 1:
         app.levelStartX -= 3.25
+    if app.isJumping:
+        app.cy += app.iconVelocity
+        app.iconVelocity += app.gravity
+        if app.cy > app.groundY - app.gridSize/2:
+            app.cy = app.groundY - app.gridSize/2
+            app.iconVelocity = 0
+            app.isJumping = False
+
+        
+
 
 def main():
     runApp()
