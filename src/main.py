@@ -11,9 +11,35 @@ def onAppStart(app):
     app.stepsPerSecond = 120
     app.levelStartX = app.width
     app.levelStartY = app.groundY
-    app.currPage = 0
+    app.currPage = 2
     app.iconCx = 250
-    app.iconCy = app.groundY - app.gridSize/2
+    app.iconCy = app.groundY
+    app.iconVelocity = 0
+    app.gravity = 0.335
+    app.inAir = False
+    app.crashed = False
+    app.level1Obstacles = [Obstacles('spike', 0, app.groundY),
+        Obstacles('flat spike', app.gridSize*20, app.groundY),
+        Obstacles('spike', app.gridSize * 21, app.groundY),
+        Obstacles('spike', app.gridSize * 41, app.groundY),
+        Obstacles('spike', app.gridSize * 42, app.groundY),
+        Obstacles('block', app.gridSize * 43, app.groundY),
+        Obstacles('block', app.gridSize * 47, app.groundY, 2, 1),
+        Obstacles('block', app.gridSize * 51, app.groundY, 3, 1),
+        Obstacles('spike', app.gridSize * 69, app.groundY),
+        Obstacles('spike', app.gridSize * 70, app.groundY),
+        Obstacles('block', app.gridSize * 74, app.groundY, 1, 6),
+        Obstacles('block', app.gridSize * 83, app.groundY, 1, 13),
+        Obstacles('spike', app.gridSize * 89, app.groundY - app.gridSize),
+        Obstacles('block', app.gridSize * 99, app.groundY - app.gridSize, 1, 13),
+        Obstacles('spike', app.gridSize * 105, app.groundY -app.gridSize*2),
+        ]
+    
+def resetApp(app):
+    app.levelStartX = app.width
+    app.levelStartY = app.groundY
+    app.iconCx = 250
+    app.iconCy = app.groundY
     app.iconVelocity = 0
     app.gravity = 0.335
     app.inAir = False
@@ -43,8 +69,8 @@ def redrawAll(app):
     elif app.currPage == 2:
         (drawRect(0, app.groundY, app.width, app.height - app.groundY, 
                 fill = None, border = 'black'))
-        (drawRect(app.iconCx, app.iconCy, app.gridSize, app.gridSize, 
-                  align = 'center'))
+        (drawRect(app.iconCx, app.iconCy, app.gridSize, app.gridSize,  
+                  align = 'bottom-left'))
         drawLevel1(app)
 
 
@@ -84,17 +110,40 @@ def drawObstacle(app, obstacle):
 
 def checkCollision(app, L):
     for obstacle in L:
-        if (app.iconCx - app.gridSize/2 < obstacle.leftX 
-            < app.iconCx + app.gridSize/2):
+        vtxsCopy = copy.copy(obstacle.vtxs)
+        for i in range(0, len(vtxsCopy), 2):
+            vtxsCopy[i] += app.levelStartX
+        if (app.iconCx - app.gridSize * obstacle.width < vtxsCopy[0] 
+            < app.iconCx + app.gridSize):
+            
             if obstacle.type == 'block':
-                if not app.inAir:
-                    if (app.iconCy + app.gridSize/2 
-                        > obstacle.bottomY - app.gridSize):
-                        app.crashed = True
-                else:
-                    if (app.iconCy + app.gridSize/2 
-                        > obstacle.bottomY - app.gridSize):
-                        app.iconCy = obstacle.bottomY - app.gridSize
+                if (app.iconCy - app.gridSize < vtxsCopy[1] 
+                    < app.iconCy + app.gridSize * obstacle.height):
+                    if app.iconVelocity <= 0:
+                        return True
+                    else:
+                        app.iconCy = obstacle.bottomY - (obstacle.height * app.gridSize)
+                        app.iconVelocity = 0
+                        app.inAir = False
+
+            elif (obstacle.type == 'spike') or (obstacle.type == 'flat spike'):
+                slope1 = (vtxsCopy[3] - vtxsCopy[1])/(vtxsCopy[2] - vtxsCopy[0])
+                yInt1 = -1*(slope1 * vtxsCopy[0]) + vtxsCopy[1]
+                check1 = slope1 * (app.iconCx + app.gridSize) + yInt1
+
+                slope2 = (vtxsCopy[3] - vtxsCopy[5])/(vtxsCopy[2] - vtxsCopy[4])
+                yInt2 = -1*(slope2 * vtxsCopy[4]) + vtxsCopy[5]
+                check2 = slope2 * (app.iconCx) + yInt2
+                
+                if (app.iconCy - app.gridSize < vtxsCopy[1] 
+                    < app.iconCy + app.gridSize):
+                    if ((app.iconCx + app.gridSize) < vtxsCopy[2] and
+                        app.iconCy < check1):
+                        return False
+                    elif (app.iconCx > vtxsCopy[2] and
+                        app.iconCy < check2):
+                        return False
+                    return True
 
 def onMousePress(app, mouseX, mouseY):
     if app.currPage == 0:
@@ -107,26 +156,29 @@ def onMousePress(app, mouseX, mouseY):
 def onKeyPress(app, key):
     if app.currPage > 1:
         if key == 'space':
-            if not app.inAir:
+            if not (checkCollision(app, app.level1Obstacles) or app.inAir):
                 app.inAir = True
                 app.iconVelocity = -9
 
 def onKeyHold(app, keys):
     if 'space' in keys:
-        if not app.inAir:
+        if not (checkCollision(app, app.level1Obstacles) or app.inAir):
                 app.inAir = True
                 app.iconVelocity = -9
                 
 def onStep(app):
     if app.currPage > 1:
-        app.levelStartX -= 4.25
-        if app.inAir:
-            app.iconCy += app.iconVelocity
-            app.iconVelocity += app.gravity
-            if app.iconCy > app.groundY - app.gridSize/2:
-                app.iconCy = app.groundY - app.gridSize/2
-                app.iconVelocity = 0
-                app.inAir = False
+        if not checkCollision(app, app.level1Obstacles):
+            app.levelStartX -= 4.25
+            if app.iconCy < app.groundY:
+                app.inAir = True
+            if app.inAir:
+                app.iconCy += app.iconVelocity
+                app.iconVelocity += app.gravity
+                if app.iconCy > app.groundY:
+                    app.iconCy = app.groundY
+                    app.iconVelocity = 0
+                    app.inAir = False
 
 def main():
     runApp()

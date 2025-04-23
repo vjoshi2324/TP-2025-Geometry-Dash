@@ -19,3 +19,5 @@ vjoshi2
 - Created layout for home + level menu pages
 - Did navigation from home through level pages
 - Worked on icon moving physics - jumping
+- Obstacles class
+- collisions
