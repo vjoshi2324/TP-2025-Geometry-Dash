@@ -6,18 +6,20 @@ def onAppStart(app):
     app.width = 800
     app.height = 600
     app.sqSize = 200
-    app.groundY = 400
+    app.groundY = 500
     app.gridSize = 50
     app.stepsPerSecond = 120
     app.levelStartX = app.width
     app.levelStartY = app.groundY
     app.currPage = 0
+    app.icon = 'cube'
     app.iconCx = 250
     app.iconCy = app.groundY
     app.iconVelocity = 0
     app.gravity = 0.34
     app.inAir = False
-    app.iconColor = 'blue'
+    app.iconColorOuter = 'blue'
+    app.iconColorInner = 'purple'
     app.crashed = False
     app.level1Obstacles = [Obstacles('spike', app.gridSize * 8, app.groundY),
         Obstacles('flat spike', app.gridSize * 29, app.groundY),
@@ -34,6 +36,69 @@ def onAppStart(app):
         Obstacles('spike', app.gridSize * 105, app.groundY - app.gridSize),
         Obstacles('block', app.gridSize * 115, app.groundY-app.gridSize, 1, 13),
         Obstacles('spike', app.gridSize * 121, app.groundY -app.gridSize*2),
+        Obstacles('block', app.gridSize * 131, app.groundY - app.gridSize * 2),
+        Obstacles('block', app.gridSize * 135, app.groundY - app.gridSize * 3),
+        Obstacles('block', app.gridSize * 139, app.groundY - app.gridSize * 4),
+        Obstacles('block', app.gridSize * 143, app.groundY - app.gridSize * 5),
+        Obstacles('block', app.gridSize * 147, app.groundY - app.gridSize * 2),
+        Obstacles('block', app.gridSize * 151, app.groundY - app.gridSize * 3),
+        Obstacles('block', app.gridSize * 155, app.groundY - app.gridSize * 4),
+        Obstacles('block', app.gridSize * 159, app.groundY, 3, 23), 
+        Obstacles('spike', app.gridSize * 164, app.groundY -app.gridSize*3),
+        Obstacles('spike', app.gridSize * 165, app.groundY -app.gridSize*3),
+        Obstacles('spike', app.gridSize * 166, app.groundY -app.gridSize*3),
+        Obstacles('spike', app.gridSize * 167, app.groundY -app.gridSize*3),
+        Obstacles('block', app.gridSize * 165, app.groundY - app.gridSize * (4+2/3), 
+                  1/3, 1),
+        Obstacles('block', app.gridSize * 166 , app.groundY - app.gridSize * (4+2/3), 
+                  1/3, 1),
+        Obstacles('spike', app.gridSize * 173, app.groundY -app.gridSize*3),
+        Obstacles('spike', app.gridSize * 174, app.groundY -app.gridSize*3),
+        Obstacles('spike', app.gridSize * 175, app.groundY -app.gridSize*3),
+        Obstacles('spike', app.gridSize * 176, app.groundY -app.gridSize*3),
+        Obstacles('block', app.gridSize * 174, app.groundY - app.gridSize * (4+2/3), 
+                  1/3, 1),
+        Obstacles('block', app.gridSize * 175 , app.groundY - app.gridSize * (4+2/3), 
+                  1/3, 1), 
+        Obstacles('block', app.gridSize * 182, app.groundY, 2, 10), 
+        Obstacles('block', app.gridSize * 185, app.groundY-app.gridSize*(3+2/3), 
+                  1/3, 1),
+        Obstacles('spike', app.gridSize * 185, app.groundY- app.gridSize * 4),
+        Obstacles('block', app.gridSize * 186, app.groundY-app.gridSize*(3+2/3), 
+                  1/3, 1),
+        Obstacles('spike', app.gridSize * 186, app.groundY- app.gridSize * 4),
+        Obstacles('block', app.gridSize * 187, app.groundY-app.gridSize*(3+2/3), 
+                  1/3, 1),
+        Obstacles('spike', app.gridSize * 187, app.groundY- app.gridSize * 4),
+        Obstacles('block', app.gridSize * 188, app.groundY-app.gridSize*(3+2/3), 
+                  1/3, 1),
+        Obstacles('spike', app.gridSize * 188, app.groundY- app.gridSize * 4),
+        Obstacles('block', app.gridSize * 192, app.groundY, 3, 5),
+        Obstacles('spike', app.gridSize * 196, app.groundY - app.gridSize * 3),
+        Obstacles('block', app.gridSize * 197, app.groundY, 1, 10),
+        Obstacles('spike', app.gridSize * 197, app.groundY - app.gridSize),
+        Obstacles('block', app.gridSize * 209, app.groundY-app.gridSize* 2/3, 
+                  1/3, 1),
+        Obstacles('block', app.gridSize * 210, app.groundY-app.gridSize* 2/3, 
+                  1/3, 1),
+        Obstacles('block', app.gridSize * 211, app.groundY-app.gridSize* 2/3, 
+                  1/3, 1),
+        Obstacles('block', app.gridSize * 212, app.groundY-app.gridSize* 2/3, 
+                  1/3, 1),
+        Obstacles('block', app.gridSize * 213, app.groundY-app.gridSize* 2/3, 
+                  1/3, 1),
+        Obstacles('spike', app.gridSize * 213, app.groundY - app.gridSize),
+        Obstacles('block', app.gridSize * 216, app.groundY-app.gridSize* 5/3, 
+                  1/3, 1),
+        Obstacles('block', app.gridSize * 217, app.groundY-app.gridSize* 5/3, 
+                  1/3, 1),
+        Obstacles('block', app.gridSize * 218, app.groundY-app.gridSize* 5/3, 
+                  1/3, 1),
+        Obstacles('block', app.gridSize * 219, app.groundY-app.gridSize* 5/3, 
+                  1/3, 1),
+        Obstacles('block', app.gridSize * 220, app.groundY-app.gridSize* 5/3, 
+                  1/3, 1),
+        Obstacles('spike', app.gridSize * 220, app.groundY - app.gridSize * 2)
         ]
     
 def resetApp(app):
@@ -44,6 +109,8 @@ def resetApp(app):
     app.iconVelocity = 0
     app.gravity = 0.34
     app.inAir = False
+    app.iconColorOuter = 'blue'
+    app.iconColorInner = 'purple'
     
     
 def redrawAll(app):
@@ -54,11 +121,15 @@ def redrawAll(app):
     elif app.currPage == 2:
         (drawRect(0, app.groundY, app.width, app.height - app.groundY, 
                 fill = None, border = 'black'))
-        (drawRect(app.iconCx, app.iconCy, app.gridSize, app.gridSize,  
-                  fill = app.iconColor, align = 'bottom-left')) # draws icon
+        drawIcon(app)
         drawLevel1(app)
 
-
+def drawIcon(app):
+    (drawRect(app.iconCx, app.iconCy, app.gridSize, app.gridSize, 
+              fill = app.iconColorOuter, align = 'bottom-left')) 
+    (drawRect(app.iconCx + app.gridSize/4, app.iconCy - app.gridSize/4, 
+              app.gridSize/2, app.gridSize/2, 
+              fill = app.iconColorInner, align = 'bottom-left')) 
 
 def drawHomePage(app):
     (drawRect(0, app.groundY + 20, app.width, app.height - app.groundY, 
@@ -66,8 +137,7 @@ def drawHomePage(app):
     drawLabel('Geometry Dash 112', app.width/2, app.height/4, size = 50, font = 'monospace')
     (drawRect(app.width/2 - 50, 250, 100, 80, fill = None, border = 'black', 
              borderWidth = 5))
-    (drawPolygon(app.width/2 - 20, 270, app.width/2 - 20, 310, app.width/2 + 30, 
-                290, fill = None, border = 'black', borderWidth = 5))
+    drawLabel('PLAY', app.width/2, 290, size = 25, font = 'monospace')
 
 def drawLevelMenu(app):
     drawLabel('Select a level!', app.width/2, app.height/5, size = 30)
@@ -92,7 +162,8 @@ def drawObstacle(app, obstacle):
         vtxsCopy = copy.copy(obstacle.vtxs)
         for i in range(0, len(vtxsCopy), 2):
             vtxsCopy[i] += app.levelStartX
-        drawPolygon(*vtxsCopy, fill = None, border = 'black')
+        if (-1 * app.gridSize * 50) <= vtxsCopy[0] <= (app.width +app.gridSize):
+            drawPolygon(*vtxsCopy, fill = None, border = 'black')
 
 def checkCollision(app, L):
     for obstacle in L:
@@ -142,10 +213,10 @@ def onMousePress(app, mouseX, mouseY):
 def onKeyPress(app, key):
     if app.currPage > 1:
         if key == 'space':
-            if not (app.crashed or app.inAir):
+            if not (checkCollision(app, app.level1Obstacles) or app.inAir):
                 app.inAir = True
                 app.iconVelocity = -9
-            else:
+            if checkCollision(app, app.level1Obstacles):
                 resetApp(app)
 
 def onKeyHold(app, keys):
@@ -159,17 +230,21 @@ def onStep(app):
     if app.currPage > 1:
         if not checkCollision(app, app.level1Obstacles):
             app.levelStartX -= 4.25
-            if app.iconCy < app.groundY:
-                app.inAir = True
-            if app.inAir:
-                app.iconCy += app.iconVelocity
-                app.iconVelocity += app.gravity
-                if app.iconCy > app.groundY:
-                    app.iconCy = app.groundY
-                    app.iconVelocity = 0
-                    app.inAir = False
+            if app.icon == 'cube':
+                if app.iconCy < app.groundY:
+                    app.inAir = True
+                if app.inAir:
+                    app.iconCy += app.iconVelocity
+                    app.iconVelocity += app.gravity
+                    if app.iconCy > app.groundY:
+                        app.iconCy = app.groundY
+                        app.iconVelocity = 0
+                        app.inAir = False
+            if app.icon == 'rocket':
+                app.velocity = 6
         else:
-            app.iconColor = 'red'
+            app.iconColorOuter = 'red'
+            app.iconColorInner = 'red'
             app.crashed = True
 
 def main():
