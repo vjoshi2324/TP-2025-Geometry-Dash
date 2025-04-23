@@ -11,13 +11,14 @@ def onAppStart(app):
     app.stepsPerSecond = 120
     app.levelStartX = app.width
     app.levelStartY = app.groundY
-    app.currPage = 2
+    app.currPage = 0
     app.iconCx = 250
     app.iconCy = app.groundY
     app.iconVelocity = 0
     app.gravity = 0.34
     app.inAir = False
     app.iconColor = 'blue'
+    app.crashed = False
     app.level1Obstacles = [Obstacles('spike', app.gridSize * 8, app.groundY),
         Obstacles('flat spike', app.gridSize * 29, app.groundY),
         Obstacles('spike', app.gridSize * 30, app.groundY),
@@ -28,11 +29,11 @@ def onAppStart(app):
         Obstacles('block', app.gridSize * 60, app.groundY, 3, 1),
         Obstacles('spike', app.gridSize * 81, app.groundY),
         Obstacles('spike', app.gridSize * 82, app.groundY),
-        Obstacles('block', app.gridSize * 88, app.groundY, 1, 6),
-        Obstacles('block', app.gridSize * 97, app.groundY, 1, 13),
-        Obstacles('spike', app.gridSize * 103, app.groundY - app.gridSize),
-        Obstacles('block', app.gridSize * 113, app.groundY-app.gridSize, 1, 13),
-        Obstacles('spike', app.gridSize * 119, app.groundY -app.gridSize*2),
+        Obstacles('block', app.gridSize * 90, app.groundY, 1, 6),
+        Obstacles('block', app.gridSize * 99, app.groundY, 1, 13),
+        Obstacles('spike', app.gridSize * 105, app.groundY - app.gridSize),
+        Obstacles('block', app.gridSize * 115, app.groundY-app.gridSize, 1, 13),
+        Obstacles('spike', app.gridSize * 121, app.groundY -app.gridSize*2),
         ]
     
 def resetApp(app):
@@ -58,10 +59,11 @@ def redrawAll(app):
         drawLevel1(app)
 
 
+
 def drawHomePage(app):
     (drawRect(0, app.groundY + 20, app.width, app.height - app.groundY, 
                 fill = None, border = 'black'))
-    drawLabel('Geometry Dash 112', app.width/2, app.height/4, size = 50)
+    drawLabel('Geometry Dash 112', app.width/2, app.height/4, size = 50, font = 'monospace')
     (drawRect(app.width/2 - 50, 250, 100, 80, fill = None, border = 'black', 
              borderWidth = 5))
     (drawPolygon(app.width/2 - 20, 270, app.width/2 - 20, 310, app.width/2 + 30, 
@@ -140,15 +142,18 @@ def onMousePress(app, mouseX, mouseY):
 def onKeyPress(app, key):
     if app.currPage > 1:
         if key == 'space':
-            if not (checkCollision(app, app.level1Obstacles) or app.inAir):
+            if not (app.crashed or app.inAir):
                 app.inAir = True
                 app.iconVelocity = -9
+            else:
+                resetApp(app)
 
 def onKeyHold(app, keys):
     if 'space' in keys:
         if not (checkCollision(app, app.level1Obstacles) or app.inAir):
                 app.inAir = True
                 app.iconVelocity = -9
+            
                 
 def onStep(app):
     if app.currPage > 1:
@@ -165,6 +170,7 @@ def onStep(app):
                     app.inAir = False
         else:
             app.iconColor = 'red'
+            app.crashed = True
 
 def main():
     runApp()
