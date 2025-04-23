@@ -15,24 +15,24 @@ def onAppStart(app):
     app.iconCx = 250
     app.iconCy = app.groundY
     app.iconVelocity = 0
-    app.gravity = 0.335
+    app.gravity = 0.34
     app.inAir = False
-    app.crashed = False
-    app.level1Obstacles = [Obstacles('spike', 0, app.groundY),
-        Obstacles('flat spike', app.gridSize*20, app.groundY),
-        Obstacles('spike', app.gridSize * 21, app.groundY),
-        Obstacles('spike', app.gridSize * 41, app.groundY),
-        Obstacles('spike', app.gridSize * 42, app.groundY),
-        Obstacles('block', app.gridSize * 43, app.groundY),
-        Obstacles('block', app.gridSize * 47, app.groundY, 2, 1),
-        Obstacles('block', app.gridSize * 51, app.groundY, 3, 1),
-        Obstacles('spike', app.gridSize * 69, app.groundY),
-        Obstacles('spike', app.gridSize * 70, app.groundY),
-        Obstacles('block', app.gridSize * 74, app.groundY, 1, 6),
-        Obstacles('block', app.gridSize * 83, app.groundY, 1, 13),
-        Obstacles('spike', app.gridSize * 89, app.groundY - app.gridSize),
-        Obstacles('block', app.gridSize * 99, app.groundY - app.gridSize, 1, 13),
-        Obstacles('spike', app.gridSize * 105, app.groundY -app.gridSize*2),
+    app.iconColor = 'blue'
+    app.level1Obstacles = [Obstacles('spike', app.gridSize * 8, app.groundY),
+        Obstacles('flat spike', app.gridSize * 29, app.groundY),
+        Obstacles('spike', app.gridSize * 30, app.groundY),
+        Obstacles('spike', app.gridSize * 50, app.groundY),
+        Obstacles('spike', app.gridSize * 51, app.groundY),
+        Obstacles('block', app.gridSize * 52, app.groundY),
+        Obstacles('block', app.gridSize * 56, app.groundY, 2, 1),
+        Obstacles('block', app.gridSize * 60, app.groundY, 3, 1),
+        Obstacles('spike', app.gridSize * 81, app.groundY),
+        Obstacles('spike', app.gridSize * 82, app.groundY),
+        Obstacles('block', app.gridSize * 88, app.groundY, 1, 6),
+        Obstacles('block', app.gridSize * 97, app.groundY, 1, 13),
+        Obstacles('spike', app.gridSize * 103, app.groundY - app.gridSize),
+        Obstacles('block', app.gridSize * 113, app.groundY-app.gridSize, 1, 13),
+        Obstacles('spike', app.gridSize * 119, app.groundY -app.gridSize*2),
         ]
     
 def resetApp(app):
@@ -41,26 +41,10 @@ def resetApp(app):
     app.iconCx = 250
     app.iconCy = app.groundY
     app.iconVelocity = 0
-    app.gravity = 0.335
+    app.gravity = 0.34
     app.inAir = False
-    app.crashed = False
-    app.level1Obstacles = [Obstacles('spike', 0, app.groundY),
-        Obstacles('flat spike', app.gridSize*20, app.groundY),
-        Obstacles('spike', app.gridSize * 21, app.groundY),
-        Obstacles('spike', app.gridSize * 41, app.groundY),
-        Obstacles('spike', app.gridSize * 42, app.groundY),
-        Obstacles('block', app.gridSize * 43, app.groundY),
-        Obstacles('block', app.gridSize * 46, app.groundY, 2, 1),
-        Obstacles('block', app.gridSize * 49, app.groundY, 3, 1),
-        Obstacles('spike', app.gridSize * 69, app.groundY),
-        Obstacles('spike', app.gridSize * 70, app.groundY),
-        Obstacles('block', app.gridSize * 74, app.groundY, 1, 6),
-        Obstacles('block', app.gridSize * 83, app.groundY, 1, 13),
-        Obstacles('spike', app.gridSize * 89, app.groundY - app.gridSize),
-        Obstacles('block', app.gridSize * 99, app.groundY - app.gridSize, 1, 13),
-        Obstacles('spike', app.gridSize * 105, app.groundY -app.gridSize*2),
-        ]
-
+    
+    
 def redrawAll(app):
     if app.currPage == 0:
         drawHomePage(app)
@@ -70,7 +54,7 @@ def redrawAll(app):
         (drawRect(0, app.groundY, app.width, app.height - app.groundY, 
                 fill = None, border = 'black'))
         (drawRect(app.iconCx, app.iconCy, app.gridSize, app.gridSize,  
-                  align = 'bottom-left'))
+                  fill = app.iconColor, align = 'bottom-left')) # draws icon
         drawLevel1(app)
 
 
@@ -115,7 +99,7 @@ def checkCollision(app, L):
             vtxsCopy[i] += app.levelStartX
         if (app.iconCx - app.gridSize * obstacle.width < vtxsCopy[0] 
             < app.iconCx + app.gridSize):
-            
+
             if obstacle.type == 'block':
                 if (app.iconCy - app.gridSize < vtxsCopy[1] 
                     < app.iconCy + app.gridSize * obstacle.height):
@@ -179,6 +163,8 @@ def onStep(app):
                     app.iconCy = app.groundY
                     app.iconVelocity = 0
                     app.inAir = False
+        else:
+            app.iconColor = 'red'
 
 def main():
     runApp()
