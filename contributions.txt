@@ -21,3 +21,5 @@ vjoshi2
 - Worked on icon moving physics - jumping
 - Obstacles class
 - collisions
+- icon editing
+- navigation

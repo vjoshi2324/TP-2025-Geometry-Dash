@@ -11,19 +11,41 @@ def onAppStart(app):
     app.stepsPerSecond = 120
     app.levelStartX = app.width
     app.levelStartY = app.groundY
-    app.currPage = 0
+    app.currPage = 4
     app.icon = 'cube'
     app.iconCx = 250
     app.iconCy = app.groundY
     app.iconVelocity = 0
     app.gravity = 0.34
     app.inAir = False
-    app.iconColorOuter = 'blue'
-    app.iconColorInner = 'purple'
+    app.iconColorOuter = gradient('dimGray', 'black', start ='center')
+    app.iconColorInner = gradient('white', 'silver', start ='center')
     app.crashed = False
+    app.steps = 0
+    app.iconNum = 3
+    app.iconColorList = ['Red', 'Orange', 'Yellow', 'Light Green', 'Green',
+                         'Light Blue', 'Blue', 'Light Purple', 'Purple', 
+                         'Light Pink', 'Pink']
+    app.iconColorPairs = [('red', 'darkRed'),
+                          ('orange', 'darkOrange'),
+                          ('yellow', 'gold'),
+                          ('paleGreen', 'mediumSpringGreen'),
+                          ('limeGreen', 'green'),
+                          ('lightSkyBlue', 'deepSkyBlue'),
+                          ('dodgerBlue', 'blue'),
+                          ('mediumOrchid', 'darkOrchid'),
+                          ('blueViolet', 'indigo'),
+                          ('plum', 'orchid'),
+                          ('hotPink', 'deepPink')
+                          ]
+    
+    # Original sound: "Electronic Drum Beat Loop 1" by audiosoundclips.com
+    #url = 'cmu://984930/38960105/My+Movie.mp4'
+   # app.sound = Sound(url)
+
 
     app.obstacleColor = gradient('dodgerBlue', 'navy', start = 'top')
-    app.background = gradient('cyan', 'mediumBlue', start = 'top')
+    app.background = gradient('purple', 'indigo', start = 'center')
     app.groundColor = gradient('midnightBlue', 'blue', start = 'top')
 
     app.level1Obstacles = [Obstacles('spike', app.gridSize * 8, app.groundY),
@@ -124,7 +146,7 @@ def onAppStart(app):
         Obstacles('block', app.gridSize * 255, app.groundY, 2, 20)
         ]
     
-def resetApp(app):
+def resetLevel(app):
     app.levelStartX = app.width
     app.levelStartY = app.groundY
     app.iconCx = 250
@@ -132,43 +154,122 @@ def resetApp(app):
     app.iconVelocity = 0
     app.gravity = 0.34
     app.inAir = False
-    app.iconColorOuter = 'blue'
-    app.iconColorInner = 'purple'
+    app.steps = 0
     
     
 def redrawAll(app):
     if app.currPage == 0:
         drawHomePage(app)
-    elif app.currPage == 1:
-        drawLevelMenu(app)
-    elif app.currPage == 2:
-        (drawRect(0, app.groundY, app.width, app.height - app.groundY, 
-                fill = app.groundColor, border = 'white'))
-        drawLevel1(app)
-        drawIcon(app)
-        if app.crashed:
-            drawLabel('You Crashed!', app.width/2, 150, size = 40, fill = 'red',
-                      font = 'monospace')
-            drawLabel('''Press 'space' to retry''', app.width/2, 195, size = 25, 
-                      fill = 'red', font = 'monospace')
+    else:
+        (drawRect(20, 20, 80, 30, fill = None, border = 'white'))
+        (drawLabel('< back', 60, 35,size = 15, fill = 'white', 
+                   font = 'monospace'))
+        if app.currPage == 1:
+            drawLevelMenu(app)
+        elif app.currPage == 2:
+            drawIconEditPage(app)
+        elif app.currPage == 4:
+            (drawRect(0, app.groundY, app.width, app.height - app.groundY, 
+                    fill = app.groundColor, border = 'white'))
+            drawLevel1(app)
+            drawIcon(app, app.iconCx, app.iconCy, 1)
+            if app.crashed:
+                drawLabel('You Crashed!', app.width/2, 150, size = 40, fill = 'red',
+                        font = 'monospace')
+                drawLabel('''Press 'space' to retry''', app.width/2, 195, size = 25, 
+                        fill = 'red', font = 'monospace')
 
-def drawIcon(app):
-    (drawRect(app.iconCx, app.iconCy, app.gridSize, app.gridSize, 
+def drawIcon(app, left, bottom, scale):
+    (drawRect(left, bottom, app.gridSize*scale, app.gridSize*scale, 
               fill = app.iconColorOuter, border = 'white' , borderWidth = 0.5,
               align = 'bottom-left')) 
-    (drawRect(app.iconCx + app.gridSize/4, app.iconCy - app.gridSize/4, 
-              app.gridSize/2, app.gridSize/2, 
-              fill = app.iconColorInner, border = 'white' , borderWidth = 0.5,
-              align = 'bottom-left')) 
+    if app.iconNum == 1:
+        (drawRect(left + (app.gridSize*scale)/4, bottom-(app.gridSize*scale)/4, 
+                (app.gridSize*scale)/2, (app.gridSize*scale)/2, 
+                fill = app.iconColorInner, border = 'white' , borderWidth = 0.5,
+                align = 'bottom-left')) 
+    elif app.iconNum == 2:
+        (drawRect(left + (app.gridSize*scale)/2, bottom-(app.gridSize*scale)/2, 
+                  (app.gridSize*scale) * (2**0.5)/2, 
+                  (app.gridSize*scale) * (2**0.5)/2, 
+                  fill = app.iconColorInner,border = 'white',borderWidth = 0.5,
+                  rotateAngle = 45, align = 'center'))
+    elif app.iconNum == 3:
+        (drawRect(left, bottom, (app.gridSize*scale)/2, (app.gridSize*scale)/2, 
+                fill = app.iconColorInner, border = 'white' , borderWidth = 0.5,
+                align = 'bottom-left'))
+        (drawRect(left + (app.gridSize*scale)/2, bottom-(app.gridSize*scale)/2, 
+                  (app.gridSize*scale)/2, (app.gridSize*scale)/2, 
+                  fill = app.iconColorInner, 
+                  border = 'white' , borderWidth = 0.5, align = 'bottom-left'))
 
 def drawHomePage(app):
     (drawRect(0, app.groundY + 20, app.width, app.height - app.groundY, 
                 fill = None, border = 'black'))
     drawLabel('Geometry Dash 112', app.width/2, app.height/4, size = 50, 
               font = 'monospace')
-    (drawRect(app.width/2 - 50, 250, 100, 80, fill = None, border = 'black', 
-             borderWidth = 5))
+    (drawRect(app.width/2 - 50, 250, 100, 80, fill = None, border = 'black'))
     drawLabel('PLAY', app.width/2, 290, size = 25, font = 'monospace')
+
+def drawIconEditPage(app):
+    drawLabel('Edit Your Icon', app.width/2, 75, size = 40, 
+              fill = 'white', font = 'monospace')
+    
+    drawLabel('Colors:', 600, 150, size = 25, 
+              fill = 'white', font = 'monospace')
+    drawLabel('Color 1:', 525, 200, size = 20, 
+              fill = 'white', font = 'monospace')
+    drawLabel('Color 2:', 675, 200, size = 20, 
+              fill = 'white', font = 'monospace')
+    
+    for i in range(len(app.iconColorList)):
+        colorLabel = app.iconColorList[i]
+        colorPair = app.iconColorPairs[i]
+        colorGradient = gradient(colorPair[0], colorPair[1], start = 'center')
+        drawRect(525, 240 + (30*i), 125, 20, fill = colorGradient, 
+                 align = 'center')
+        drawLabel(colorLabel, 525, 240 + (30*i), size = 15, 
+              fill = 'black', font = 'monospace')
+        
+        drawRect(675, 240 + (30*i), 125, 20, fill = colorGradient, 
+                 align = 'center')
+        drawLabel(colorLabel, 675, 240 + (30*i), size = 15, 
+              fill = 'black', font = 'monospace')
+    
+    drawLabel('Shapes:', 250, 465, size = 25, 
+              fill = 'white', font = 'monospace')
+    
+    (drawRect(100, 550, app.gridSize, app.gridSize, 
+              fill = gradient('dimGray', 'black', start ='center'), 
+              border = 'white' , borderWidth = 0.5, align = 'bottom-left'))
+    (drawRect(100 + (app.gridSize)/4, 550 - (app.gridSize)/4, 
+                (app.gridSize)/2, (app.gridSize)/2, 
+                fill = gradient('white', 'silver', start ='center'), 
+                border = 'white' , borderWidth = 0.5, align = 'bottom-left'))
+    
+    
+    (drawRect(225, 550, app.gridSize, app.gridSize, 
+              fill = gradient('dimGray', 'black', start ='center'), 
+              border = 'white' , borderWidth = 0.5, align = 'bottom-left'))
+    (drawRect(225 + (app.gridSize)/2, 550 - (app.gridSize)/2, 
+                  (app.gridSize) * (2**0.5)/2, (app.gridSize) * (2**0.5)/2, 
+                  fill = gradient('white', 'silver', start ='center'),
+                  border = 'white',borderWidth = 0.5, rotateAngle = 45, 
+                  align = 'center'))
+    
+    
+    (drawRect(350, 550, app.gridSize, app.gridSize, 
+              fill = gradient('dimGray', 'black', start ='center'), 
+              border = 'white' , borderWidth = 0.5, align = 'bottom-left'))
+    (drawRect(350, 550, (app.gridSize)/2, (app.gridSize)/2, 
+                fill = gradient('white', 'silver', start ='center'), 
+                border = 'white' , borderWidth = 0.5, align = 'bottom-left'))
+    (drawRect(350 + (app.gridSize)/2, 550 - (app.gridSize)/2, 
+                  (app.gridSize)/2, (app.gridSize)/2, 
+                  fill = gradient('white', 'silver', start ='center'), 
+                  border = 'white' , borderWidth = 0.5, align = 'bottom-left'))
+
+    drawIcon(app, 150, 400, 4)
 
 def drawLevelMenu(app):
     drawLabel('Select a level!', app.width/2, app.height/5, size = 30)
@@ -195,6 +296,24 @@ def drawObstacle(app, obstacle):
     for i in range(0, len(vtxsCopy), 2):
         vtxsCopy[i] += app.levelStartX
     drawPolygon(*vtxsCopy, fill = app.obstacleColor, border = 'white')
+
+def setColors(app):
+    if app.currPage <= 1:
+        app.background = gradient('purple', 'indigo', start = 'center')
+    if app.currPage == 4:
+        if app.steps < 3000:
+            app.background = gradient('cyan', 'mediumBlue', start = 'top')
+            app.obstacleColor = gradient('dodgerBlue', 'navy', start = 'top')
+            app.groundColor = gradient('midnightBlue', 'blue', start = 'top')
+        if app.steps > 3120:
+            app.background = gradient('salmon', 'red', start = 'top')
+            app.obstacleColor = gradient('fireBrick', 'black', start = 'top')
+            app.groundColor = gradient('darkRed', 'red', start = 'top')
+
+def playMusic(app):
+    if app.currPage == 2:
+        app.sound.play
+
 
 def checkCollision(app, L):
     for obstacle in L:
@@ -234,17 +353,46 @@ def checkCollision(app, L):
                         return False
                     return True
 
-def onMousePress(app, mouseX, mouseY):
+def onMousePress(app, mouseX, mouseY): 
     if app.currPage == 0:
         if ((app.width/2 - 50 <= mouseX <= app.width/2 + 50) and 
             (210 <= mouseY <= 290)):
             app.currPage = 1
-    elif app.currPage == 1:
-        if (100 <= mouseX <= 325) and (200 <= mouseY <= 325):
-            app.currPage = 2
+    else:
+        if (20 <= mouseX <= 100) and (20 <= mouseY <= 50):
+            app.currPage = 0
+            resetLevel(app)
+        if app.currPage == 1:
+            if (100 <= mouseX <= 325) and (200 <= mouseY <= 325):
+                app.currPage = 4
+        elif app.currPage == 2:
+            if (500 <= mouseY <= 550):
+                if (100 <= mouseX <= 150):
+                    app.iconNum = 1
+                elif (225 <= mouseX <= 275):
+                    app.iconNum = 2
+                elif (350 <= mouseX <= 400):
+                    app.iconNum = 3
+            if (462.5 <= mouseX <= 587.5):
+                for i in range(len(app.iconColorList)):
+                    if 225 + (30*i) <= mouseY <= 255 + (30 * i):
+                        colorPair = app.iconColorPairs[i]
+                        colorGradient = gradient(colorPair[0], colorPair[1], 
+                                                start = 'center')
+                        app.iconColorOuter = colorGradient
+            elif (612.5 <= mouseX <= 737.5):
+                for i in range(len(app.iconColorList)):
+                    if 225 + (30*i) <= mouseY <= 255 + (30 * i):
+                        colorPair = app.iconColorPairs[i]
+                        colorGradient = gradient(colorPair[0], colorPair[1], 
+                                                start = 'center')
+                        app.iconColorInner = colorGradient
 
 def onKeyPress(app, key):
-    if app.currPage > 1:
+    if app.currPage == 0:
+        if key == 'space':
+            app.currPage = 2
+    if app.currPage > 3:
         if key == 'space':
             if not (checkCollision(app, app.level1Obstacles) or app.inAir):
                 app.inAir = True
@@ -261,9 +409,11 @@ def onKeyHold(app, keys):
             app.crashed = False
                 
 def onStep(app):
-    if app.currPage > 1:
+    setColors(app)
+    if app.currPage > 3:
         if not checkCollision(app, app.level1Obstacles):
             app.levelStartX -= 4.25
+            app.steps += 1
             if app.iconCy < app.groundY:
                 app.inAir = True
             if app.inAir:
@@ -274,8 +424,6 @@ def onStep(app):
                     app.iconVelocity = 0
                     app.inAir = False
         else:
-            app.iconColorOuter = 'red'
-            app.iconColorInner = 'red'
             app.crashed = True
 
 def main():
