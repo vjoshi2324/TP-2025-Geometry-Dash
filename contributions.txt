@@ -19,8 +19,8 @@ vjoshi2
 - Created layout for home, icon editing, how to pages
 - Did navigation from home through all pages
 - Worked on icon moving physics - jumping
-- Obstacles class
+- Obstacles class 
 - Collision testing between icon and all obstacles
 - Icon shape and color editing pages
-- Through pages
+- navigation through all pages
 - Added music to level and menu/icon editing/how to pages
