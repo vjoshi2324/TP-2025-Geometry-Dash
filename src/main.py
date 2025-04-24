@@ -145,7 +145,66 @@ def onAppStart(app):
         Obstacles('block', app.gridSize * 256, app.groundY-app.gridSize*(6+2/3), 
                   1/3, 1),
         Obstacles('spike', app.gridSize * 256, app.groundY - app.gridSize * 7),
-        Obstacles('block', app.gridSize * 255, app.groundY, 2, 20)
+        Obstacles('block', app.gridSize * 255, app.groundY, 2, 20), 
+        Obstacles('block', app.gridSize * 265, app.groundY - app.gridSize * 2),
+        Obstacles('spike', app.gridSize * 265, app.groundY - app.gridSize * 3),
+        Obstacles('spike', app.gridSize * 275, app.groundY), 
+        Obstacles('spike', app.gridSize * 280, app.groundY),
+        Obstacles('spike', app.gridSize * 281, app.groundY),
+        Obstacles('block', app.gridSize * 282, app.groundY, 1, 2),
+        Obstacles('block', app.gridSize * 286, app.groundY-app.gridSize*(2/3), 
+                  1/3, 2),
+        Obstacles('block', app.gridSize * 291, app.groundY-app.gridSize*(1+2/3), 
+                  1/3, 2),
+        Obstacles('block', app.gridSize * 294, app.groundY, 1, 2),
+        Obstacles('block', app.gridSize * 298, app.groundY-app.gridSize*(1+2/3), 
+                  1/3, 2),
+        Obstacles('spike', app.gridSize * 300, app.groundY),
+        Obstacles('spike', app.gridSize * 301, app.groundY),
+
+        
+        Obstacles('spike', app.gridSize * 308, app.groundY),
+        Obstacles('block', app.gridSize * 308, app.groundY - app.gridSize*4),
+        Obstacles('block', app.gridSize * 308, app.groundY - app.gridSize*5),
+        
+        Obstacles('spike', app.gridSize * 309, app.groundY),
+        Obstacles('block', app.gridSize * 309, app.groundY - app.gridSize*4),
+        Obstacles('block', app.gridSize * 309, app.groundY - app.gridSize*5),
+        
+        Obstacles('spike', app.gridSize * 315, app.groundY),
+        Obstacles('block', app.gridSize * 315, app.groundY - app.gridSize*4),
+        Obstacles('block', app.gridSize * 315, app.groundY - app.gridSize*5),
+        Obstacles('spike', app.gridSize * 316, app.groundY),
+        Obstacles('block', app.gridSize * 316, app.groundY - app.gridSize*4),
+        Obstacles('block', app.gridSize * 316, app.groundY - app.gridSize*5),
+        Obstacles('spike', app.gridSize * 317, app.groundY),
+        Obstacles('block', app.gridSize * 317, app.groundY - app.gridSize*4),
+        Obstacles('block', app.gridSize * 317, app.groundY - app.gridSize*5),
+
+        Obstacles('spike', app.gridSize * 325, app.groundY),
+        Obstacles('block', app.gridSize * 325, app.groundY - app.gridSize*4),
+        Obstacles('block', app.gridSize * 325, app.groundY - app.gridSize*5),
+
+        Obstacles('spike', app.gridSize * 329, app.groundY),
+        Obstacles('block', app.gridSize * 329, app.groundY - app.gridSize*4),
+        Obstacles('block', app.gridSize * 329, app.groundY - app.gridSize*5), 
+
+        Obstacles('spike', app.gridSize * 337, app.groundY),
+        Obstacles('block', app.gridSize * 338, app.groundY),
+        Obstacles('block', app.gridSize * 342, app.groundY, 2, 1),
+        Obstacles('block', app.gridSize * 346, app.groundY, 3, 1),
+        Obstacles('block', app.gridSize * 350, app.groundY, 4, 1),
+        Obstacles('block', app.gridSize * 351, app.groundY-app.gridSize*(3+2/3),
+                  1/3, 4),
+        Obstacles('block', app.gridSize * 355, app.groundY-app.gridSize*(2+2/3),
+                  1/3, 2),
+        Obstacles('block', app.gridSize * 357, app.groundY-app.gridSize*(1+2/3),
+                  1/3, 2),
+        Obstacles('block', app.gridSize * 359, app.groundY-app.gridSize*(2/3),
+                  1/3, 2),
+        Obstacles('block', app.gridSize * 362, app.groundY-app.gridSize, 1, 3),
+        Obstacles('spike', app.gridSize * 367, app.groundY),
+        Obstacles('block', app.gridSize * 367, app.groundY)
         ]
     
 def resetLevel(app):
@@ -162,8 +221,7 @@ def loadSound(relativePath):
     absolutePath = os.path.abspath(relativePath)
     url = pathlib.Path(absolutePath).as_uri()
     return Sound(url)
-    
-    
+      
 def redrawAll(app):
     if app.currPage == 0:
         drawHomePage(app)
@@ -177,9 +235,9 @@ def redrawAll(app):
             drawLevel1(app)
             drawIcon(app, app.iconCx, app.iconCy, 1)
             if app.crashed:
-                drawLabel('You Crashed!', app.width/2, 150, size = 40, 
+                drawLabel('You Crashed!', app.width/2, 100, size = 40, 
                           fill = 'red', font = 'monospace')
-                drawLabel('''Press 'space' to retry''', app.width/2, 195, 
+                drawLabel('''Press 'space' to retry''', app.width/2, 145, 
                           size = 25, fill = 'red', font = 'monospace')
         elif app.currPage == 2:
             drawIconEditPage(app)
