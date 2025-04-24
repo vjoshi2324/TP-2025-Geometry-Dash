@@ -4,7 +4,9 @@ import os, pathlib
 from obstacles import Obstacles
 
 def onAppStart(app):
-    app.level1Music = (loadSound('/Users/vishakhajoshi2324/Documents/15-112/level1Music0.mp3'))
+    app.level1Music = loadSound('/Users/vishakhajoshi2324/Documents/15-112/level1Music0.mp3')
+    app.menuMusic = loadSound('/Users/vishakhajoshi2324/Documents/15-112/menuMusic.mp3')
+    app.menuMusic.play(loop = True)
 
     app.width = 800
     app.height = 600
@@ -169,19 +171,17 @@ def redrawAll(app):
         (drawLabel('< back', 60, 35,size = 15, fill = 'white', 
                    font = 'monospace'))
         if app.currPage == 1:
-            drawLevelMenu(app)
-        elif app.currPage == 2:
-            drawIconEditPage(app)
-        elif app.currPage == 4:
             (drawRect(0, app.groundY, app.width, app.height - app.groundY, 
                     fill = app.groundColor, border = 'white'))
             drawLevel1(app)
             drawIcon(app, app.iconCx, app.iconCy, 1)
             if app.crashed:
-                drawLabel('You Crashed!', app.width/2, 150, size = 40, fill = 'red',
-                        font = 'monospace')
-                drawLabel('''Press 'space' to retry''', app.width/2, 195, size = 25, 
-                        fill = 'red', font = 'monospace')
+                drawLabel('You Crashed!', app.width/2, 150, size = 40, 
+                          fill = 'red', font = 'monospace')
+                drawLabel('''Press 'space' to retry''', app.width/2, 195, 
+                          size = 25, fill = 'red', font = 'monospace')
+        elif app.currPage == 2:
+            drawIconEditPage(app)
 
 def drawIcon(app, left, bottom, scale):
     (drawRect(left, bottom, app.gridSize*scale, app.gridSize*scale, 
@@ -209,11 +209,12 @@ def drawIcon(app, left, bottom, scale):
 
 def drawHomePage(app):
     (drawRect(0, app.groundY + 20, app.width, app.height - app.groundY, 
-                fill = None, border = 'black'))
+                fill = None, border = 'white'))
     drawLabel('Geometry Dash 112', app.width/2, app.height/4, size = 50, 
-              font = 'monospace')
-    (drawRect(app.width/2 - 50, 250, 100, 80, fill = None, border = 'black'))
-    drawLabel('PLAY', app.width/2, 290, size = 25, font = 'monospace')
+              fill = 'white', font = 'monospace')
+    (drawRect(app.width/2 - 50, 250, 100, 80, fill = None, border = 'white'))
+    (drawLabel('PLAY', app.width/2, 290, size = 25, 
+               fill = 'white', font = 'monospace'))
 
 def drawIconEditPage(app):
     drawLabel('Edit Your Icon', app.width/2, 75, size = 40, 
@@ -275,7 +276,7 @@ def drawIconEditPage(app):
 
     drawIcon(app, 150, 400, 4)
 
-def drawLevelMenu(app):
+def drawLevelMenu(app): # make this how to
     drawLabel('Select a level!', app.width/2, app.height/5, size = 30)
     
     drawRect(100, 200, 225, 125, fill = None, border = 'black')
@@ -291,7 +292,8 @@ def drawLevelMenu(app):
     drawLabel('Demo Mode', 475 + 225/2, 400+ 125/2, size = 20)
 
 def drawLevel1(app):
-    drawLabel('Level 1', app.levelStartX - app.width/2, 175, size = 40, font = 'monospace')
+    (drawLabel('Level 1', app.levelStartX - app.width/2, 175, 
+              fill = 'white', size = 40, font = 'monospace'))
     for i in range(len(app.level1Obstacles)):
         drawObstacle(app, app.level1Obstacles[i])
 
@@ -302,9 +304,9 @@ def drawObstacle(app, obstacle):
     drawPolygon(*vtxsCopy, fill = app.obstacleColor, border = 'white')
 
 def setColors(app):
-    if app.currPage <= 1:
+    if app.currPage == 0:
         app.background = gradient('purple', 'indigo', start = 'center')
-    if app.currPage == 4:
+    if app.currPage == 1:
         if app.steps < 3000:
             app.background = gradient('cyan', 'mediumBlue', start = 'top')
             app.obstacleColor = gradient('dodgerBlue', 'navy', start = 'top')
@@ -357,14 +359,15 @@ def onMousePress(app, mouseX, mouseY):
         if ((app.width/2 - 50 <= mouseX <= app.width/2 + 50) and 
             (210 <= mouseY <= 290)):
             app.currPage = 1
+            app.level1Music.play(restart = True)
+            app.menuMusic.pause()
     else:
         if (20 <= mouseX <= 100) and (20 <= mouseY <= 50):
+            if app.currPage == 1:
+                app.level1Music.pause()
+                app.menuMusic.play(restart = True, loop = True)
             app.currPage = 0
             resetLevel(app)
-        if app.currPage == 1:
-            if (100 <= mouseX <= 325) and (200 <= mouseY <= 325):
-                app.currPage = 4
-                app.level1Music.play(restart = True)
         elif app.currPage == 2:
             if (500 <= mouseY <= 550):
                 if (100 <= mouseX <= 150):
@@ -392,7 +395,7 @@ def onKeyPress(app, key):
     if app.currPage == 0:
         if key == 'space':
             app.currPage = 2
-    if app.currPage > 3:
+    if app.currPage == 1:
         if key == 'space':
             if not (checkCollision(app, app.level1Obstacles) or app.inAir):
                 app.inAir = True
@@ -412,7 +415,7 @@ def onKeyHold(app, keys):
                 
 def onStep(app):
     setColors(app)
-    if app.currPage > 3:
+    if app.currPage == 1:
         if not checkCollision(app, app.level1Obstacles):
             app.levelStartX -= 4.25
             app.steps += 1
