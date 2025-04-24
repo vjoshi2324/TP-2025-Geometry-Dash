@@ -7,6 +7,7 @@ def onAppStart(app):
     ## Music from original Geometry Dash game, downloaded from Internet Archive
     app.level1Music = loadSound('/Users/vishakhajoshi2324/Documents/15-112/level1Music0.mp3')
     app.menuMusic = loadSound('/Users/vishakhajoshi2324/Documents/15-112/menuMusic.mp3')
+    ## Could not move Pathname's to different lines without crashing
     app.menuMusic.play(loop = True)
 
     app.width = 800
@@ -289,14 +290,14 @@ def drawHomePage(app):
                fill = 'indigo', font = 'monospace'))
     (drawLabel('LEVEL', app.width/2 + 3, app.height/2 + 20 + 3, size = 30, 
                fill = 'indigo', font = 'monospace'))
-    (drawRect(app.width/2 - 100 + 3, app.height/2 + 150 + 3, 150, 80, fill = None, 
-              border = 'indigo', align = 'center'))
-    (drawRect(app.width/2 + 100 + 3, app.height/2 + 150 + 3, 150, 80, fill = None, 
-              border = 'indigo', align = 'center'))
-    (drawLabel('Edit Icon', app.width/2 - 100 + 3, app.height/2 + 150 + 3, size = 20, 
-               fill = 'indigo', font = 'monospace'))
-    (drawLabel('How To', app.width/2 + 100 + 3, app.height/2 + 150 + 3, size = 20, 
-               fill = 'indigo', font = 'monospace'))
+    (drawRect(app.width/2 - 100 + 3, app.height/2 + 150 + 3, 150, 80, 
+              fill = None, border = 'indigo', align = 'center'))
+    (drawRect(app.width/2 + 100 + 3, app.height/2 + 150 + 3, 150, 80, 
+              fill = None, border = 'indigo', align = 'center'))
+    (drawLabel('Edit Icon', app.width/2 - 100 + 3, app.height/2 + 150 + 3, 
+               size = 20, fill = 'indigo', font = 'monospace'))
+    (drawLabel('How To', app.width/2 + 100 + 3, app.height/2 + 150 + 3, 
+               size = 20, fill = 'indigo', font = 'monospace'))
 
     drawLabel('Geometry Dash 112', app.width/2, app.height/4, size = 50, 
               fill = 'white', font = 'monospace')
@@ -394,13 +395,17 @@ def drawHowTo(app):
                 font = 'monospace', fill = 'white'))
     drawLine(app.width/2 - 150, app.height/2 + 125, app.width/2 + 150, 
              app.height/2 + 125, fill = 'white')
-    drawRect(app.width/2 + 5, app.height/2 + 40, 30, 30, fill = 'white', border = 'white')
-    drawPolygon(app.width/2 - 20, app.height/2 + 125, app.width/2 - 5, app.height/2 + 95, 
-                app.width/2 + 10, app.height/2 + 125, fill = 'white', border = 'white')
-    drawPolygon(app.width/2 + 10, app.height/2 + 125, app.width/2 + 25, app.height/2 + 95, 
-                app.width/2 + 40, app.height/2 + 125, fill = 'white', border = 'white')
-    drawPolygon(app.width/2 + 40, app.height/2 + 125, app.width/2 + 55, app.height/2 + 95, 
-                app.width/2 + 70, app.height/2 + 125, fill = 'white', border = 'white')
+    drawRect(app.width/2 + 5, app.height/2 + 40, 30, 30, fill = 'white', 
+             border = 'white')
+    drawPolygon(app.width/2 - 20, app.height/2 + 125, app.width/2 - 5, 
+                app.height/2 + 95, app.width/2 + 10, app.height/2 + 125, 
+                fill = 'white', border = 'white')
+    drawPolygon(app.width/2 + 10, app.height/2 + 125, app.width/2 + 25, 
+                app.height/2 + 95, app.width/2 + 40, app.height/2 + 125, 
+                fill = 'white', border = 'white')
+    drawPolygon(app.width/2 + 40, app.height/2 + 125, app.width/2 + 55, 
+                app.height/2 + 95, app.width/2 + 70, app.height/2 + 125, 
+                fill = 'white', border = 'white')
 
     (drawLabel('And Have Fun!', app.width/2, app.height - 100,size = 25, 
                 font = 'monospace', fill = 'white'))
@@ -521,12 +526,11 @@ def onKeyPress(app, key):
                 resetLevel(app)
                 app.level1Music.play(restart = True)
                 
-
 def onKeyHold(app, keys):
     if 'space' in keys:
         if not (checkCollision(app, app.level1Obstacles) or app.inAir):
-                app.inAir = True
-                app.iconVelocity = -9
+            app.inAir = True
+            app.iconVelocity = -9
         if app.crashed:
             app.crashed = False
                 
