@@ -202,9 +202,21 @@ def onAppStart(app):
                   1/3, 2),
         Obstacles('block', app.gridSize * 359, app.groundY-app.gridSize*(2/3),
                   1/3, 2),
-        Obstacles('block', app.gridSize * 362, app.groundY-app.gridSize, 1, 3),
         Obstacles('spike', app.gridSize * 367, app.groundY),
-        Obstacles('block', app.gridSize * 367, app.groundY)
+        Obstacles('block', app.gridSize * 367, app.groundY), 
+        Obstacles('block', app.gridSize * 372, app.groundY), 
+        Obstacles('block', app.gridSize * 373, app.groundY-app.gridSize*(2/3),
+                  1/3, 2),
+        Obstacles('block', app.gridSize * 377, app.groundY-app.gridSize*(1+2/3),
+                  1/3, 1),
+        Obstacles('block', app.gridSize * 381, app.groundY-app.gridSize*(2+2/3),
+                  1/3, 1),
+        Obstacles('block', app.gridSize * 385, app.groundY-app.gridSize*(3+2/3),
+                  1/3, 2),
+        Obstacles('block', app.gridSize * 387, app.groundY - app.gridSize * 3),
+        Obstacles('block', app.gridSize * 388, app.groundY - app.gridSize * 2),
+        Obstacles('block', app.gridSize * 389, app.groundY - app.gridSize),
+        Obstacles('block', app.gridSize * 390, app.groundY)
         ]
     
 def resetLevel(app):
