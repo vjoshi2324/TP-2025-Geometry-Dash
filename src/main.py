@@ -4,6 +4,7 @@ import os, pathlib
 from obstacles import Obstacles
 
 def onAppStart(app):
+    ## Music from original Geometry Dash game, downloaded from Internet Archive
     app.level1Music = loadSound('/Users/vishakhajoshi2324/Documents/15-112/level1Music0.mp3')
     app.menuMusic = loadSound('/Users/vishakhajoshi2324/Documents/15-112/menuMusic.mp3')
     app.menuMusic.play(loop = True)
@@ -46,7 +47,7 @@ def onAppStart(app):
 
 
     app.obstacleColor = gradient('dodgerBlue', 'navy', start = 'top')
-    app.background = gradient('purple', 'indigo', start = 'center')
+    app.background = gradient('darkMagenta', 'indigo', start = 'center')
     app.groundColor = gradient('midnightBlue', 'blue', start = 'top')
 
     app.level1Obstacles = [Obstacles('spike', app.gridSize * 8, app.groundY),
@@ -182,6 +183,8 @@ def redrawAll(app):
                           size = 25, fill = 'red', font = 'monospace')
         elif app.currPage == 2:
             drawIconEditPage(app)
+        elif app.currPage == 3:
+            drawHowTo(app)
 
 def drawIcon(app, left, bottom, scale):
     (drawRect(left, bottom, app.gridSize*scale, app.gridSize*scale, 
@@ -208,12 +211,38 @@ def drawIcon(app, left, bottom, scale):
                   border = 'white' , borderWidth = 0.5, align = 'bottom-left'))
 
 def drawHomePage(app):
-    (drawRect(0, app.groundY + 20, app.width, app.height - app.groundY, 
-                fill = None, border = 'white'))
+    drawLabel('Geometry Dash 112', app.width/2 + 3, app.height/4 + 3, size = 50, 
+              fill = 'indigo', font = 'monospace')
+    (drawRect(app.width/2 + 3, app.height/2 + 3, 150, 120, fill = None, 
+              border = 'indigo', align = 'center'))
+    (drawLabel('PLAY', app.width/2 + 3, app.height/2 - 20 + 3, size = 30, 
+               fill = 'indigo', font = 'monospace'))
+    (drawLabel('LEVEL', app.width/2 + 3, app.height/2 + 20 + 3, size = 30, 
+               fill = 'indigo', font = 'monospace'))
+    (drawRect(app.width/2 - 100 + 3, app.height/2 + 150 + 3, 150, 80, fill = None, 
+              border = 'indigo', align = 'center'))
+    (drawRect(app.width/2 + 100 + 3, app.height/2 + 150 + 3, 150, 80, fill = None, 
+              border = 'indigo', align = 'center'))
+    (drawLabel('Edit Icon', app.width/2 - 100 + 3, app.height/2 + 150 + 3, size = 20, 
+               fill = 'indigo', font = 'monospace'))
+    (drawLabel('How To', app.width/2 + 100 + 3, app.height/2 + 150 + 3, size = 20, 
+               fill = 'indigo', font = 'monospace'))
+
     drawLabel('Geometry Dash 112', app.width/2, app.height/4, size = 50, 
               fill = 'white', font = 'monospace')
-    (drawRect(app.width/2 - 50, 250, 100, 80, fill = None, border = 'white'))
-    (drawLabel('PLAY', app.width/2, 290, size = 25, 
+    (drawRect(app.width/2, app.height/2, 150, 120, fill = None, 
+              border = 'white', align = 'center'))
+    (drawLabel('PLAY', app.width/2, app.height/2 - 20, size = 30, 
+               fill = 'white', font = 'monospace'))
+    (drawLabel('LEVEL', app.width/2, app.height/2 + 20, size = 30, 
+               fill = 'white', font = 'monospace'))
+    (drawRect(app.width/2 - 100, app.height/2 + 150, 150, 80, fill = None, 
+              border = 'white', align = 'center'))
+    (drawRect(app.width/2 + 100, app.height/2 + 150, 150, 80, fill = None, 
+              border = 'white', align = 'center'))
+    (drawLabel('Edit Icon', app.width/2 - 100, app.height/2 + 150, size = 20, 
+               fill = 'white', font = 'monospace'))
+    (drawLabel('How To', app.width/2 + 100, app.height/2 + 150, size = 20, 
                fill = 'white', font = 'monospace'))
 
 def drawIconEditPage(app):
@@ -276,20 +305,35 @@ def drawIconEditPage(app):
 
     drawIcon(app, 150, 400, 4)
 
-def drawLevelMenu(app): # make this how to
-    drawLabel('Select a level!', app.width/2, app.height/5, size = 30)
-    
-    drawRect(100, 200, 225, 125, fill = None, border = 'black')
-    drawLabel('Level 1', 100 + 225/2, 200+ 125/2, size = 20)
-    
-    drawRect(100, 400, 225, 125, fill = None, border = 'black')
-    drawLabel('Level 2', 100 + 225/2, 400+ 125/2, size = 20)
-    
-    drawRect(475, 200, 225, 125, fill = None, border = 'black')
-    drawLabel('Level 3', 475 + 225/2, 200+ 125/2, size = 20)
-    
-    drawRect(475, 400, 225, 125, fill = None, border = 'black')
-    drawLabel('Demo Mode', 475 + 225/2, 400+ 125/2, size = 20)
+def drawHowTo(app):
+    (drawLabel('How To Play', app.width/2, 50, size = 40, 
+                font = 'monospace', fill = 'white'))
+    (drawLabel('Travel Through The Level', app.width/2, 125, size = 25, 
+                font = 'monospace', fill = 'white'))
+    drawLine(app.width/2 - 150, 250, app.width/2 + 150, 250, 
+             fill = 'white')
+    drawRect(app.width/2 - 110, 220, 30, 30, fill = 'white', border = 'white')
+    drawPolygon(app.width/2 - 20, 250, app.width/2 - 5, 220, 
+                app.width/2 + 10, 250, fill = 'white', border = 'white')
+    drawPolygon(app.width/2 + 10, 250, app.width/2 + 25, 220, 
+                app.width/2 + 40, 250, fill = 'white', border = 'white')
+    drawPolygon(app.width/2 + 40, 250, app.width/2 + 55, 220, 
+                app.width/2 + 70, 250, fill = 'white', border = 'white')
+
+    (drawLabel('''Press 'Space' To Jump''', app.width/2, app.height/2,size = 25, 
+                font = 'monospace', fill = 'white'))
+    drawLine(app.width/2 - 150, app.height/2 + 125, app.width/2 + 150, 
+             app.height/2 + 125, fill = 'white')
+    drawRect(app.width/2 + 5, app.height/2 + 40, 30, 30, fill = 'white', border = 'white')
+    drawPolygon(app.width/2 - 20, app.height/2 + 125, app.width/2 - 5, app.height/2 + 95, 
+                app.width/2 + 10, app.height/2 + 125, fill = 'white', border = 'white')
+    drawPolygon(app.width/2 + 10, app.height/2 + 125, app.width/2 + 25, app.height/2 + 95, 
+                app.width/2 + 40, app.height/2 + 125, fill = 'white', border = 'white')
+    drawPolygon(app.width/2 + 40, app.height/2 + 125, app.width/2 + 55, app.height/2 + 95, 
+                app.width/2 + 70, app.height/2 + 125, fill = 'white', border = 'white')
+
+    (drawLabel('And Have Fun!', app.width/2, app.height - 100,size = 25, 
+                font = 'monospace', fill = 'white'))
 
 def drawLevel1(app):
     (drawLabel('Level 1', app.levelStartX - app.width/2, 175, 
@@ -305,7 +349,7 @@ def drawObstacle(app, obstacle):
 
 def setColors(app):
     if app.currPage == 0:
-        app.background = gradient('purple', 'indigo', start = 'center')
+        app.background = gradient('darkMagenta', 'indigo', start = 'center')
     if app.currPage == 1:
         if app.steps < 3000:
             app.background = gradient('cyan', 'mediumBlue', start = 'top')
@@ -356,11 +400,17 @@ def checkCollision(app, L):
 
 def onMousePress(app, mouseX, mouseY): 
     if app.currPage == 0:
-        if ((app.width/2 - 50 <= mouseX <= app.width/2 + 50) and 
-            (210 <= mouseY <= 290)):
+        if ((app.width/2 - 75 <= mouseX <= app.width/2 + 75) and 
+            (app.height/2 - 60 <= mouseY <= app.height/2 + 60)):
             app.currPage = 1
             app.level1Music.play(restart = True)
             app.menuMusic.pause()
+        elif ((app.width/2 - 175 <= mouseX <= app.width/2 -25) and 
+            (app.height/2 + 110 <= mouseY <= app.height/2 + 190)):
+            app.currPage = 2
+        elif ((app.width/2 + 25 <= mouseX <= app.width/2 + 175) and 
+            (app.height/2 + 110 <= mouseY <= app.height/2 + 190)):
+            app.currPage = 3
     else:
         if (20 <= mouseX <= 100) and (20 <= mouseY <= 50):
             if app.currPage == 1:
@@ -392,9 +442,6 @@ def onMousePress(app, mouseX, mouseY):
                         app.iconColorInner = colorGradient
 
 def onKeyPress(app, key):
-    if app.currPage == 0:
-        if key == 'space':
-            app.currPage = 2
     if app.currPage == 1:
         if key == 'space':
             if not (checkCollision(app, app.level1Obstacles) or app.inAir):
