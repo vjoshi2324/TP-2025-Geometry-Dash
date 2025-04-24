@@ -1,8 +1,11 @@
 from cmu_graphics import *
 import copy
+import os, pathlib
 from obstacles import Obstacles
 
 def onAppStart(app):
+    app.level1Music = (loadSound('/Users/vishakhajoshi2324/Documents/15-112/level1Music0.mp3'))
+
     app.width = 800
     app.height = 600
     app.sqSize = 200
@@ -11,7 +14,7 @@ def onAppStart(app):
     app.stepsPerSecond = 120
     app.levelStartX = app.width
     app.levelStartY = app.groundY
-    app.currPage = 4
+    app.currPage = 0
     app.icon = 'cube'
     app.iconCx = 250
     app.iconCy = app.groundY
@@ -38,10 +41,6 @@ def onAppStart(app):
                           ('plum', 'orchid'),
                           ('hotPink', 'deepPink')
                           ]
-    
-    # Original sound: "Electronic Drum Beat Loop 1" by audiosoundclips.com
-    #url = 'cmu://984930/38960105/My+Movie.mp4'
-   # app.sound = Sound(url)
 
 
     app.obstacleColor = gradient('dodgerBlue', 'navy', start = 'top')
@@ -155,6 +154,11 @@ def resetLevel(app):
     app.gravity = 0.34
     app.inAir = False
     app.steps = 0
+
+def loadSound(relativePath):
+    absolutePath = os.path.abspath(relativePath)
+    url = pathlib.Path(absolutePath).as_uri()
+    return Sound(url)
     
     
 def redrawAll(app):
@@ -310,11 +314,6 @@ def setColors(app):
             app.obstacleColor = gradient('fireBrick', 'black', start = 'top')
             app.groundColor = gradient('darkRed', 'red', start = 'top')
 
-def playMusic(app):
-    if app.currPage == 2:
-        app.sound.play
-
-
 def checkCollision(app, L):
     for obstacle in L:
         vtxsCopy = copy.copy(obstacle.vtxs)
@@ -365,6 +364,7 @@ def onMousePress(app, mouseX, mouseY):
         if app.currPage == 1:
             if (100 <= mouseX <= 325) and (200 <= mouseY <= 325):
                 app.currPage = 4
+                app.level1Music.play(restart = True)
         elif app.currPage == 2:
             if (500 <= mouseY <= 550):
                 if (100 <= mouseX <= 150):
@@ -398,7 +398,9 @@ def onKeyPress(app, key):
                 app.inAir = True
                 app.iconVelocity = -9
             if checkCollision(app, app.level1Obstacles):
-                resetApp(app)
+                resetLevel(app)
+                app.level1Music.play(restart = True)
+                
 
 def onKeyHold(app, keys):
     if 'space' in keys:
@@ -425,6 +427,7 @@ def onStep(app):
                     app.inAir = False
         else:
             app.crashed = True
+            app.level1Music.pause()
 
 def main():
     runApp()
